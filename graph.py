@@ -1,14 +1,17 @@
 from langgraph.graph import StateGraph, START, END
-
+from agents.user_story.generator import story
+from agents.user_story.reviewer import review_story
+from agents.user_story.reviser import revise_story
+from agents.user_story.story_router import story_route
 from state import State
 
 
 graph = StateGraph(State)
 
 
-graph.add_node("story", lambda state: state)
-graph.add_node("story_review", lambda state: state)
-graph.add_node("story_fix", lambda state: state)
+graph.add_node("story",story)
+graph.add_node("story_review",review_story)
+graph.add_node("story_fix",revise_story)
 
 graph.add_node("design", lambda state: state)
 graph.add_node("design_review", lambda state: state)
@@ -39,8 +42,8 @@ graph.add_conditional_edges(
     "story_review",
     story_route,
     {
-        "next": "design",
-        "fix": "story_fix",
+        "approved": "design",
+        "feedback": "story_fix",
     },
 )
 

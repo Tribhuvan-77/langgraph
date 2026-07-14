@@ -13,4 +13,4 @@ class State(BaseModel):
     test_cases: str = ""
     test_review: str = ""
     qa_result: str = ""
-    deployment_status: str = ""
+    deployment_status: bool=False
