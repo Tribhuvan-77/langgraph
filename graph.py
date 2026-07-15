@@ -22,7 +22,7 @@ graph.add_node("story_fix",revise_story)
 graph.add_node("design",design)
 graph.add_node("design_review",review_design)
 
-graph.add_node("code", lambda state: state)
+graph.add_node("code",code_generator)
 graph.add_node("code_review", lambda state: state)
 graph.add_node("code_fix", lambda state: state)
 
@@ -52,7 +52,7 @@ graph.add_conditional_edges(
     },
 )
 
-graph.add_edge("story_fix", "story")
+graph.add_edge("story_fix", "story_review")
 
 graph.add_edge("design", "design_review")
 
