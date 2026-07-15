@@ -1,9 +1,6 @@
 from graph import app
 from uuid import uuid4
 
-
-
-
 def main():
     user_input = input()
 

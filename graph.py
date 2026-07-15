@@ -4,6 +4,8 @@ from agents.user_story.reviewer import review_story
 from agents.user_story.reviser import revise_story
 from agents.user_story.story_router import story_route
 from agents.design.router import design_router
+from agents.design.generator import design
+from agents.design.reviewer import review_design
 from state import State
 from checkpointer import checkpointers
 
@@ -17,9 +19,8 @@ graph.add_node("story",story)
 graph.add_node("story_review",review_story)
 graph.add_node("story_fix",revise_story)
 
-graph.add_node("design", lambda state: state)
-graph.add_node("design_review", lambda state: state)
-graph.add_node("design_fix", lambda state: state)
+graph.add_node("design",design)
+graph.add_node("design_review",review_design)
 
 graph.add_node("code", lambda state: state)
 graph.add_node("code_review", lambda state: state)
