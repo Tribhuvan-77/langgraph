@@ -10,3 +10,14 @@ class Reviewresult(str, Enum):
 class StoryReview(BaseModel):
     status: Reviewresult
     feedback: str
+
+
+
+class ReviewStatus(str, Enum):
+    approved = "approved"
+    feedback = "feedback"
+
+
+class ReviewResult(BaseModel):
+    status: ReviewStatus
+    feedback: str

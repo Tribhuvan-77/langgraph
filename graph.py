@@ -3,6 +3,7 @@ from agents.user_story.generator import story
 from agents.user_story.reviewer import review_story
 from agents.user_story.reviser import revise_story
 from agents.user_story.story_router import story_route
+from agents.design.router import design_router
 from state import State
 
 
@@ -53,14 +54,12 @@ graph.add_edge("design", "design_review")
 
 graph.add_conditional_edges(
     "design_review",
-    design_route,
+    design_router,
     {
-        "next": "code",
-        "fix": "design_fix",
+        "approved": "code",
+        "feedback": "design",
     },
 )
-
-graph.add_edge("design_fix", "design")
 
 graph.add_edge("code", "code_review")
 

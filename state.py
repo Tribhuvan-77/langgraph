@@ -4,9 +4,14 @@ from pydantic import BaseModel
 class State(BaseModel):
     user_input: str = ""
     user_story: str = ""
-    story_review: str = ""
+
+    story_status:str= ""
+    story_feedback: str = ""
+
     design_doc: str = ""
-    design_review: str = ""
+    design_status: str = ""
+    design_feedback:str= ""
+    
     code: str = ""
     code_review: str = ""
     security_review: str = ""
