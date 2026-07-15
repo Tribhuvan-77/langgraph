@@ -5,6 +5,9 @@ from agents.user_story.reviser import revise_story
 from agents.user_story.story_router import story_route
 from agents.design.router import design_router
 from state import State
+from checkpointer import checkpointers
+
+
 
 
 graph = StateGraph(State)
@@ -112,4 +115,6 @@ graph.add_edge("qa_fix", "code")
 graph.add_edge("deploy", END)
 
 
-app = graph.compile()
+checkpointers.setup()
+
+app = graph.compile(checkpointer=checkpointers)
