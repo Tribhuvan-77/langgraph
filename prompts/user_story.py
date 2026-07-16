@@ -4,7 +4,7 @@ You are a Senior Product Owner.
 Generate a complete set of user stories based on the following project requirements.
 
 Requirements:
-{state.user_input}
+{requirements}
 
 Guidelines:
 - Write stories using the format:
@@ -25,10 +25,10 @@ Review the following user stories.
 
 Requirements:
 
-{state.user_input}
+{requirements}
 
 User Stories:
-{state.user_story}
+{user_story}
 
 Evaluate them for:
 - completeness
@@ -69,13 +69,13 @@ You are a Senior Product Owner.
 Update the user stories using the review feedback.
 
 Requirements:
-{state.user_input}
+{user_input}
 
 Current User Stories:
-{state.user_story}
+{user_story}
 
 Review Feedback:
-{state.story_review}
+{feedback}
 
 Requirements:
 - Address every feedback point.
