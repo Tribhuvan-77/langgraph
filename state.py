@@ -13,17 +13,17 @@ class State(BaseModel):
     design_feedback:str= ""
 
     code: str = ""
-    code_review: str = ""
+    code_status: str = ""
     code_feedback:str= ""
 
-    security_review: str = ""
+    security_status: str = ""
     security_feedback:str = ""
 
     test_cases: str = ""
-    test_review: str = ""
+    test_status: str = ""
     test_feedback:str=""
 
-    qa_result: str = ""
+    qa_status: str = ""
     qa_feedback:str=""
     
     deployment_status: bool=False
