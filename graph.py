@@ -6,7 +6,9 @@ from agents.user_story.story_router import story_route
 from agents.design.router import design_router
 from agents.design.generator import design
 from agents.design.reviewer import review_design
+from agents.code.code_generator import code
 from state import State
+from LongTermMem import add_memory
 from checkpointer import checkpointers
 
 
@@ -22,7 +24,7 @@ graph.add_node("story_fix",revise_story)
 graph.add_node("design",design)
 graph.add_node("design_review",review_design)
 
-graph.add_node("code",code_generator)
+graph.add_node("code",code)
 graph.add_node("code_review", lambda state: state)
 graph.add_node("code_fix", lambda state: state)
 
@@ -38,6 +40,7 @@ graph.add_node("qa_fix", lambda state: state)
 
 graph.add_node("deploy", lambda state: state)
 
+graph.add_node("longterm_mem",add_memory)
 
 graph.add_edge(START, "story")
 
@@ -51,6 +54,8 @@ graph.add_conditional_edges(
         "feedback": "story_fix",
     },
 )
+
+graph.add_edge("story_review","longterm_mem")
 
 graph.add_edge("story_fix", "story_review")
 
@@ -71,8 +76,8 @@ graph.add_conditional_edges(
     "code_review",
     code_route,
     {
-        "next": "security",
-        "fix": "code_fix",
+        "approved": "security",
+        "feedback": "code_fix",
     },
 )
 
