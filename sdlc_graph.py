@@ -18,10 +18,6 @@ from agents.qa.qa_reviewer import qa_review
 from agents.qa.qa_router import qa_route
 from state import State
 from LongTermMem import add_memory
-from checkpointer import checkpointers
-
-
-
 
 graph = StateGraph(State)
 
@@ -79,7 +75,7 @@ graph.add_conditional_edges(
     },
 )
 
-graph.add_edge("code", "review_code")
+graph.add_edge("code", "code_review")
 
 graph.add_conditional_edges(
     "code_review",
@@ -117,14 +113,9 @@ graph.add_conditional_edges(
     "qa",
     qa_route,
     {
-        "approved": "deploy",
+        "approved": "longterm_mem",
         "feedback": "code",
     },
 )
 
-graph.add_edge("deploy", END)
 
-
-checkpointers.setup()
-
-app = graph.compile(checkpointer=checkpointers)

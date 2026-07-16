@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class State(BaseModel):
     user_input: str = ""
+    user_id:str=""
     user_story: str = ""
 
     story_status:str= ""
