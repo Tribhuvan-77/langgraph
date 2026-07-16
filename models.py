@@ -21,3 +21,13 @@ class ReviewStatus(str, Enum):
 class ReviewResult(BaseModel):
     status: ReviewStatus
     feedback: str
+
+
+class ReviewStatus(str, Enum):
+    approved = "approved"
+    feedback = "feedback"
+
+
+class ReviewResult(BaseModel):
+    status: ReviewStatus
+    feedback: str

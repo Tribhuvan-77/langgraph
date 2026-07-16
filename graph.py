@@ -7,6 +7,9 @@ from agents.design.router import design_router
 from agents.design.generator import design
 from agents.design.reviewer import review_design
 from agents.code.code_generator import code
+from agents.code.code_reviewer import review_code
+from agents.code.code_fixer import fix_code
+from agents.code.code_router import code_route
 from state import State
 from LongTermMem import add_memory
 from checkpointer import checkpointers
@@ -25,8 +28,8 @@ graph.add_node("design",design)
 graph.add_node("design_review",review_design)
 
 graph.add_node("code",code)
-graph.add_node("code_review", lambda state: state)
-graph.add_node("code_fix", lambda state: state)
+graph.add_node("code_review",review_code)
+graph.add_node("code_fix", fix_code)
 
 graph.add_node("security", lambda state: state)
 graph.add_node("security_fix", lambda state: state)
@@ -70,18 +73,18 @@ graph.add_conditional_edges(
     },
 )
 
-graph.add_edge("code", "code_review")
+graph.add_edge("code", "review_code")
 
 graph.add_conditional_edges(
     "code_review",
     code_route,
     {
         "approved": "security",
-        "feedback": "code_fix",
+        "feedback": "fix_code",
     },
 )
 
-graph.add_edge("code_fix", "code")
+graph.add_edge("code_fix", "code_review")
 
 graph.add_conditional_edges(
     "security",
