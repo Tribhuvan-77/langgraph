@@ -1,25 +1,46 @@
 
 from uuid import uuid4
-from langgraph.checkpoint.postgres import PostgresSaver
+from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from langgraph.types import Command
 from dotenv import load_dotenv
 import os
 from sdlc_graph import graph
+import asyncio
 
 load_dotenv()
 
 DB_URI = os.getenv("DATABASE_URL")
 
 id=str(uuid4())
+config={"configurable": {"thread_id":"test+_thread"}}
+   
+async def main():
+    async with AsyncPostgresSaver.from_conn_string(DB_URI) as checkpointer:
+      await checkpointer.setup()
+      a=graph.compile(checkpointer=checkpointer)
+      user_input = input()
+      while True:
+        try:
+            async for event in a.astream_events({"user_input": user_input,"user_id":id},config=config,version="v2"):
+                if event["event"] == "on_chain_start":
+                 print(event["name"])
+        except Exception as e:
+            print(f"graph failed: {e}")
 
+            input("Fix the code and press Enter to resume: ")
+            async for event in a.astream_events(None,config=config,version="v2"):
+                    if event["event"] == "on_chain_start":
+                        print(event["name"])
 
-def main():
-    with PostgresSaver.from_conn_string(DB_URI) as checkpointer:
-     checkpointer.setup()
-     a=graph.compile(checkpointer=checkpointer)
-     user_input = input()
-     result = a.invoke({"user_input": user_input,"user_id":id},config={"configurable": {"thread_id":id}})
-     print(result)
+         
+      
+      
+      
+    #   decision = input("yes or no?")
+
+    #   async for event in a.astream_events(Command(resume=decision),config=config):
+    #      print(event)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

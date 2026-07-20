@@ -1,7 +1,7 @@
 import json
 
 from config import llm
-from models import ReviewResult
+from models import CodeReviewResult
 from prompts.code import code_reviewer_prompt
 
 
@@ -11,10 +11,15 @@ def review_code(state):
 
     if not response.content:
         raise ValueError("Failed to review generated code.")
+    
+    print(repr(response.content))
+    
+    data=json.loads(response.content)
 
-    review = ReviewResult.model_validate(json.loads(response.content))
+    review = CodeReviewResult.model_validate(data)
 
     state.code_status = review.status.value
     state.code_feedback = review.feedback
+    state.code_count+=1
 
     return state

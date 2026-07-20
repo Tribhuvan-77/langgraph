@@ -1,26 +1,31 @@
 from config import llm
 from prompts.user_story import reviewer_prompt
-from models import Reviewresult
+from models import ReviewResult
 import json
 
 
 def review_story(state):
     prompt=reviewer_prompt
-    response = llm.invoke(prompt.format(requirements=state.user_input,user_story=state.user_story))
+    try:
+     response = llm.invoke(prompt.format(requirements=state.user_input,user_story=state.user_story))
+     if not response.content:
+           raise ValueError("Failed to review user stories.")
+     
+     result=response.content
+     print(result)
 
-    if not response.content:
-        raise ValueError("Failed to review user stories.")
 
-    result = response.content
+     data=json.loads(result)
+     review = ReviewResult.model_validate(data)
 
-    data=json.loads(result.content)
-    review = Reviewresult.model_validate(data)
-
-    if review.status=="approved":
+     if review.status=="approved":
         state.story_status = "approved"
         state.story_feedback = ""
-    elif review.status=="feedback":
+     elif review.status=="feedback":
         state.story_status = "feedback"
         state.story_feedback =review.feedback
+        state.story_count+=1
+    except Exception as e :
+       raise e
 
     return state

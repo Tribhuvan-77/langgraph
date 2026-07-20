@@ -1,4 +1,8 @@
 from state import State
 
 def code_route(state: State):
-    return state.code_status
+    if state.code_count<2:
+      return state.code_status
+    elif state.code_count>2:
+       state.code_status="approved"
+       return state.code_status
