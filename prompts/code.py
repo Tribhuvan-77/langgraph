@@ -59,17 +59,17 @@ Review the implementation based on the following criteria:
 
 If the implementation satisfies all the above criteria, return ONLY valid JSON:
 
-{
+{{
     "status": "approved",
     "feedback": ""
-}
+}}
 
 Otherwise return ONLY valid JSON:
 
-{
+{{
     "status": "feedback",
     "feedback": "Provide a detailed list of improvements required before approval."
-}
+}}
 
 Return only valid JSON.
 Do not include markdown.

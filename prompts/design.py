@@ -55,7 +55,7 @@ Software Design Document:
 {design}
 
 Evaluate the design based on:
-
+-keep it as minimal as possible keeping tokens in mind
 - Requirement Coverage
 - User Story Coverage
 - Functional Modules
@@ -71,21 +71,30 @@ Evaluate the design based on:
 - Error Handling
 - Software Engineering Best Practices
 
+-Do not wrap the response in ```json or ``` fences.
+-Do not include any explanation.
+
 If the design is satisfactory, return ONLY valid JSON:
 
-{
+{{
     "status": "approved",
     "feedback": ""
-}
+}}
 
 Otherwise return ONLY valid JSON:
 
-{
-    "status": "feedback",
-    "feedback": "Provide a detailed list of improvements required before approval."
-}
+{{
+      "status": "feedback",
+  "feedback": [
+    "Improve API Design",
+    "Add Security section"
+  ]
+}}
 
 Do not include markdown.
 Do not include explanations.
 Return only valid JSON.
 """
+
+
+
