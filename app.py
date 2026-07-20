@@ -12,16 +12,27 @@ load_dotenv()
 DB_URI = os.getenv("DATABASE_URL")
 
 id=str(uuid4())
-config={"configurable": {"thread_id":id}}
+config={"configurable": {"thread_id":"test+_thread"}}
    
 async def main():
     async with AsyncPostgresSaver.from_conn_string(DB_URI) as checkpointer:
       await checkpointer.setup()
       a=graph.compile(checkpointer=checkpointer)
       user_input = input()
-      async for event in a.astream_events({"user_input": user_input,"user_id":id},config=config,version="v2"):
-         if event["event"] == "on_chain_start":
-          print(event["name"])
+      while True:
+        try:
+            async for event in a.astream_events({"user_input": user_input,"user_id":id},config=config,version="v2"):
+                if event["event"] == "on_chain_start":
+                 print(event["name"])
+        except Exception as e:
+            print(f"graph failed: {e}")
+
+            input("Fix the code and press Enter to resume: ")
+            async for event in a.astream_events(None,config=config,version="v2"):
+                    if event["event"] == "on_chain_start":
+                        print(event["name"])
+
+         
       
       
       

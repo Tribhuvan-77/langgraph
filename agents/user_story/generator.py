@@ -6,11 +6,10 @@ def story(state):
     prompt=generator_prompt
     try:
      response = llm.invoke(prompt.format(requirements=state.user_input))
+     if not response.content:
+        raise ValueError("Failed to generate user stories.")
+     state.user_story = response.content
     except Exception as e:
        print(e)
-    if not response.content:
-        raise ValueError("Failed to generate user stories.")
-
-    state.user_story = response.content
 
     return state

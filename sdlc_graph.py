@@ -16,33 +16,33 @@ from agents.test.reviewer import review_test
 from agents.test.test_router import test_route
 from agents.qa.qa_reviewer import qa_review
 from agents.qa.qa_router import qa_route
+from LongTermMem import add_memory
 from state import State
-
 
 graph = StateGraph(State)
 
+graph.add_node("story", story)
+graph.add_node("story_review", review_story)
+graph.add_node("story_fix", revise_story)
 
-graph.add_node("story",story)
-graph.add_node("story_review",review_story)
-graph.add_node("story_fix",revise_story)
+graph.add_node("design", design)
+graph.add_node("design_review", review_design)
 
-graph.add_node("design",design)
-graph.add_node("design_review",review_design)
+graph.add_node("code", code)
+graph.add_node("code_review", review_code)
 
-graph.add_node("code",code)
-graph.add_node("code_review",review_code)
+graph.add_node("security_review", review_security)
 
-graph.add_node("security_review",lambda x:print("success"))
+graph.add_node("tests", test)
+graph.add_node("test_review", review_test)
 
-# graph.add_node("tests", test)
-# graph.add_node("test_review",review_test)
+graph.add_node("qa", qa_review)
 
+graph.add_node("deploy", lambda state: print(state.deployment_status))
 
-# graph.add_node("qa",qa_review)
-
-
-# graph.add_node("deploy", lambda state: print(state.deployment_status))
-
+graph.add_node("story_memory", add_memory)
+graph.add_node("design_memory", add_memory)
+graph.add_node("deploy_memory", add_memory)
 
 graph.add_edge(START, "story")
 
@@ -52,27 +52,27 @@ graph.add_conditional_edges(
     "story_review",
     story_route,
     {
-        "approved": "design",
+        "approved": "story_memory",
         "feedback": "story_fix",
     },
 )
 
-
-
 graph.add_edge("story_fix", "story_review")
 
+graph.add_edge("story_memory", "design")
+
 graph.add_edge("design", "design_review")
-
-
 
 graph.add_conditional_edges(
     "design_review",
     design_route,
     {
-        "approved": "code",
+        "approved": "design_memory",
         "feedback": "design",
     },
 )
+
+graph.add_edge("design_memory", "code")
 
 graph.add_edge("code", "code_review")
 
@@ -85,7 +85,6 @@ graph.add_conditional_edges(
     },
 )
 
-
 graph.add_conditional_edges(
     "security_review",
     security_route,
@@ -94,7 +93,6 @@ graph.add_conditional_edges(
         "feedback": "code",
     },
 )
-
 
 graph.add_edge("tests", "test_review")
 
@@ -107,7 +105,6 @@ graph.add_conditional_edges(
     },
 )
 
-
 graph.add_conditional_edges(
     "qa",
     qa_route,
@@ -117,4 +114,6 @@ graph.add_conditional_edges(
     },
 )
 
+graph.add_edge("deploy", "deploy_memory")
+graph.add_edge("deploy_memory", END)
 

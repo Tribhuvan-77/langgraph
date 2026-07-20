@@ -11,8 +11,12 @@ def review_code(state):
 
     if not response.content:
         raise ValueError("Failed to review generated code.")
+    
+    print(repr(response.content))
+    
+    data=json.loads(response.content)
 
-    review = CodeReviewResult.model_validate(json.loads(response.content))
+    review = CodeReviewResult.model_validate(data)
 
     state.code_status = review.status.value
     state.code_feedback = review.feedback
